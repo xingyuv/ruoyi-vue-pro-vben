@@ -174,7 +174,7 @@ async function getCode() {
 async function getTenantId() {
   if (tenantEnable === 'true') {
     const res = await LoginApi.getTenantIdByName(formData.tenantName)
-    authUtil.setTenantId(res.id)
+    authUtil.setTenantId(res)
   }
 }
 

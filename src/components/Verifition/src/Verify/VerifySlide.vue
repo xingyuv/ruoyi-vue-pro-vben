@@ -315,7 +315,7 @@ const end = () => {
         passFlag.value = true
         tipWords.value = `${((endMovetime.value - startMoveTime.value) / 1000).toFixed(2)}s
             ${t('component.captcha.success')}`
-        var captchaVerification = secretKey.value
+        const captchaVerification = secretKey.value
           ? aesEncrypt(
               backToken.value + '---' + JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
               secretKey.value
