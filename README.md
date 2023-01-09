@@ -2,7 +2,7 @@
 
 [![license](https://img.shields.io/github/license/xingyu4j/vue-vben-admin.svg)](LICENSE)
 
-<h1>Vue vben admin</h1>
+<h1>ruoyi-vue-pro-vben</h1>
 
 ## 精简版地址
 [gitee](https://gitee.com/xingyu4j/vue-vben-admin/tree/thin/)
@@ -22,7 +22,6 @@
 - **TypeScript**: 应用程序级 JavaScript 的语言
 - **主题**：可配置的主题
 - **国际化**：内置完善的国际化方案
-- **Mock 数据** 内置 Mock 数据方案
 - **权限** 内置完善的动态路由权限生成方案
 - **组件** 二次封装了多个常用的组件
 
@@ -45,7 +44,6 @@
 - [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
 - [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router 基本使用
 - [Ant-Design-Vue](https://2x.antdv.com/docs/vue/introduce-cn/) - ui 基本使用
-- [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
 
 ## 安装使用
 

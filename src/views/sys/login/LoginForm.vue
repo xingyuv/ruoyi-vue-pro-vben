@@ -8,10 +8,19 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
-    <FormItem name="account" class="enter-x">
+    <FormItem name="tenantName" class="enter-x">
+      <Input
+        v-if="tenantEnable === 'true'"
+        size="large"
+        v-model:value="formData.tenantName"
+        :placeholder="t('sys.login.tenantName')"
+        class="fix-auto-fill"
+      />
+    </FormItem>
+    <FormItem name="username" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.account"
+        v-model:value="formData.username"
         :placeholder="t('sys.login.userName')"
         class="fix-auto-fill"
       />
@@ -24,6 +33,14 @@
         :placeholder="t('sys.login.password')"
       />
     </FormItem>
+
+    <Verify
+      ref="verify"
+      mode="pop"
+      :captchaType="captchaType"
+      :imgSize="{ width: '400px', height: '200px' }"
+      @success="handleLogin"
+    />
 
     <ARow class="enter-x">
       <ACol :span="12">
@@ -45,7 +62,7 @@
     </ARow>
 
     <FormItem class="enter-x">
-      <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
+      <Button type="primary" size="large" block @click="getCode" :loading="loading">
         {{ t('sys.login.loginButton') }}
       </Button>
       <!-- <Button size="large" class="mt-4 enter-x" block @click="handleRegister">
@@ -64,9 +81,9 @@
         </Button>
       </ACol>
       <ACol :md="6" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
+        <a-button block @click="setLoginState(LoginStateEnum.REGISTER)">
           {{ t('sys.login.registerButton') }}
-        </Button>
+        </a-button>
       </ACol>
     </ARow>
 
@@ -100,12 +117,17 @@ import { useMessage } from '@/hooks/web/useMessage'
 import { useUserStore } from '@/store/modules/user'
 import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
 import { useDesign } from '@/hooks/web/useDesign'
-//import { onKeyStroke } from '@vueuse/core';
+
+import * as LoginApi from '@/api/sys/login'
+import * as authUtil from '@/utils/auth'
+
+import { Verify } from '@/components/Verifition'
 
 const ACol = Col
 const ARow = Row
 const FormItem = Form.Item
 const InputPassword = Input.Password
+
 const { t } = useI18n()
 const { notification, createErrorModal } = useMessage()
 const { prefixCls } = useDesign('login')
@@ -118,9 +140,17 @@ const formRef = ref()
 const loading = ref(false)
 const rememberMe = ref(false)
 
+const tenantEnable = ref(import.meta.env.VITE_GLOB_APP_TENANT_ENABLE)
+const captchaEnable = ref(import.meta.env.VITE_GLOB_APP_CAPTCHA_ENABLE)
+
+const verify = ref()
+const captchaType = ref('blockPuzzle') // blockPuzzle 滑块 clickWord 点击文字
+
 const formData = reactive({
-  account: 'vben',
-  password: '123456'
+  tenantName: '芋道源码',
+  username: 'admin',
+  password: 'admin123',
+  captchaVerification: ''
 })
 
 const { validForm } = useFormValid(formRef)
@@ -129,14 +159,36 @@ const { validForm } = useFormValid(formRef)
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 
-async function handleLogin() {
+// 获取验证码
+async function getCode() {
+  // 情况一，未开启：则直接登录
+  if (captchaEnable.value === 'false') {
+    await handleLogin({})
+  } else {
+    // 情况二，已开启：则展示验证码；只有完成验证码的情况，才进行登录
+    // 弹出验证码
+    verify.value.show()
+  }
+}
+
+//获取租户ID
+async function getTenantId() {
+  if (tenantEnable.value === 'true') {
+    const res = await LoginApi.getTenantIdByName(formData.tenantName)
+    authUtil.setTenantId(res.id)
+  }
+}
+
+async function handleLogin(params) {
+  await getTenantId()
   const data = await validForm()
   if (!data) return
   try {
     loading.value = true
     const userInfo = await userStore.login({
       password: data.password,
-      username: data.account,
+      username: data.username,
+      captchaVerification: params.captchaVerification,
       mode: 'none' //不要默认的错误提示
     })
     if (userInfo) {

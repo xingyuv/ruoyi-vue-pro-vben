@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { RoleEnum } from '@/enums/roleEnum'
 import { PageEnum } from '@/enums/pageEnum'
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum'
+import { ROLES_KEY, ACCESS_TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum'
 import { getAuthCache, setAuthCache } from '@/utils/auth'
 import { GetUserInfoModel, LoginParams } from '@/api/sys/model/userModel'
 import { doLogout, getUserInfo, loginApi } from '@/api/sys/user'
@@ -19,7 +19,7 @@ import { h } from 'vue'
 
 interface UserState {
   userInfo: Nullable<UserInfo>
-  token?: string
+  accessToken?: string
   roleList: RoleEnum[]
   sessionTimeout?: boolean
   lastUpdateTime: number
@@ -31,7 +31,7 @@ export const useUserStore = defineStore({
     // user info
     userInfo: null,
     // token
-    token: undefined,
+    accessToken: undefined,
     // roleList
     roleList: [],
     // Whether the login expired
@@ -43,8 +43,8 @@ export const useUserStore = defineStore({
     getUserInfo(): UserInfo {
       return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {}
     },
-    getToken(): string {
-      return this.token || getAuthCache<string>(TOKEN_KEY)
+    getAccessToken(): string {
+      return this.accessToken || getAuthCache<string>(ACCESS_TOKEN_KEY)
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY)
@@ -58,8 +58,8 @@ export const useUserStore = defineStore({
   },
   actions: {
     setToken(info: string | undefined) {
-      this.token = info ? info : '' // for null or undefined value
-      setAuthCache(TOKEN_KEY, info)
+      this.accessToken = info ? info : '' // for null or undefined value
+      setAuthCache(ACCESS_TOKEN_KEY, info)
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList
@@ -75,7 +75,7 @@ export const useUserStore = defineStore({
     },
     resetState() {
       this.userInfo = null
-      this.token = ''
+      this.accessToken = ''
       this.roleList = []
       this.sessionTimeout = false
     },
@@ -101,7 +101,7 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
-      if (!this.getToken) return null
+      if (!this.getAccessToken) return null
       // get user info
       const userInfo = await this.getUserInfoAction()
 
@@ -123,7 +123,7 @@ export const useUserStore = defineStore({
       return userInfo
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getToken) return null
+      if (!this.getAccessToken) return null
       const userInfo = await getUserInfo()
       const { roles = [] } = userInfo
       if (isArray(roles)) {
@@ -140,7 +140,7 @@ export const useUserStore = defineStore({
      * @description: logout
      */
     async logout(goLogin = false) {
-      if (this.getToken) {
+      if (this.getAccessToken) {
         try {
           await doLogout()
         } catch {

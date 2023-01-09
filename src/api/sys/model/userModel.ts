@@ -4,6 +4,7 @@
 export interface LoginParams {
   username: string
   password: string
+  captchaVerification: string
 }
 
 export interface RoleInfo {

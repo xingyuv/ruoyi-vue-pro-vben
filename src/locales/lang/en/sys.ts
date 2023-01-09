@@ -96,6 +96,7 @@ export default {
     policyPlaceholder: 'Register after checking',
     diffPwd: 'The two passwords are inconsistent',
 
+    tenantName: 'TenantName',
     userName: 'Username',
     password: 'Password',
     confirmPassword: 'Confirm Password',
