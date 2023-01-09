@@ -5,7 +5,7 @@
       :style="{ 'max-width': parseInt(imgSize.width) + 20 + 'px' }"
     >
       <div class="verifybox-top" v-if="mode == 'pop'">
-        {{ t('captcha.verification') }}
+        {{ t('component.captcha.verification') }}
         <span class="verifybox-close" @click="closeBox">
           <i class="iconfont icon-close"></i>
         </span>
@@ -36,7 +36,8 @@
  * Verify 验证码组件
  * @description 分发验证码使用
  * */
-import { VerifySlide, VerifyPoints } from './Verify'
+import VerifySlide from './Verify/VerifySlide.vue'
+import VerifyPoints from './Verify/VerifyPoints.vue'
 import { computed, ref, toRefs, watchEffect } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 

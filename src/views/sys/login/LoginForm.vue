@@ -34,14 +34,6 @@
       />
     </FormItem>
 
-    <Verify
-      ref="verify"
-      mode="pop"
-      :captchaType="captchaType"
-      :imgSize="{ width: '400px', height: '200px' }"
-      @success="handleLogin"
-    />
-
     <ARow class="enter-x">
       <ACol :span="12">
         <FormItem>
@@ -97,6 +89,13 @@
       <TwitterCircleFilled />
     </div>
   </Form>
+  <Verify
+    ref="verify"
+    mode="pop"
+    :captchaType="captchaType"
+    :imgSize="{ width: '400px', height: '200px' }"
+    @success="handleLogin"
+  />
 </template>
 <script setup lang="ts">
 import { reactive, ref, unref, computed } from 'vue'
@@ -116,6 +115,7 @@ import { useMessage } from '@/hooks/web/useMessage'
 
 import { useUserStore } from '@/store/modules/user'
 import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
+import { useGlobSetting } from '@/hooks/setting'
 import { useDesign } from '@/hooks/web/useDesign'
 
 import * as LoginApi from '@/api/sys/login'
@@ -133,15 +133,14 @@ const { notification, createErrorModal } = useMessage()
 const { prefixCls } = useDesign('login')
 const userStore = useUserStore()
 
+const { tenantEnable, captchaEnable } = useGlobSetting()
+
 const { setLoginState, getLoginState } = useLoginState()
 const { getFormRules } = useFormRules()
 
 const formRef = ref()
 const loading = ref(false)
 const rememberMe = ref(false)
-
-const tenantEnable = ref(import.meta.env.VITE_GLOB_APP_TENANT_ENABLE)
-const captchaEnable = ref(import.meta.env.VITE_GLOB_APP_CAPTCHA_ENABLE)
 
 const verify = ref()
 const captchaType = ref('blockPuzzle') // blockPuzzle 滑块 clickWord 点击文字
@@ -162,7 +161,7 @@ const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 // 获取验证码
 async function getCode() {
   // 情况一，未开启：则直接登录
-  if (captchaEnable.value === 'false') {
+  if (captchaEnable === 'false') {
     await handleLogin({})
   } else {
     // 情况二，已开启：则展示验证码；只有完成验证码的情况，才进行登录
@@ -173,7 +172,7 @@ async function getCode() {
 
 //获取租户ID
 async function getTenantId() {
-  if (tenantEnable.value === 'true') {
+  if (tenantEnable === 'true') {
     const res = await LoginApi.getTenantIdByName(formData.tenantName)
     authUtil.setTenantId(res.id)
   }

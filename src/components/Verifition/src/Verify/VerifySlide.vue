@@ -61,7 +61,7 @@
             }"
           >
             <img
-              :src="'data:image/png;base64,' + blockBackImgBase"
+              :src="blockBackImgBase"
               alt=""
               style="width: 100%; height: 100%; display: block; -webkit-user-drag: none"
             />
@@ -144,35 +144,35 @@ const props = defineProps({
 const { t } = useI18n()
 const { mode, captchaType, type, blockSize, explain } = toRefs(props)
 const { proxy } = getCurrentInstance()
-let secretKey = ref(''), //后端返回的ase加密秘钥
-  passFlag = ref(''), //是否通过的标识
-  backImgBase = ref(''), //验证码背景图片
-  blockBackImgBase = ref(''), //验证滑块的背景图片
-  backToken = ref(''), //后端返回的唯一token值
-  startMoveTime = ref(''), //移动开始的时间
-  endMovetime = ref(''), //移动结束的时间
-  tipWords = ref(''),
-  text = ref(''),
-  finishText = ref(''),
-  setSize = reactive({
-    imgHeight: 0,
-    imgWidth: 0,
-    barHeight: 0,
-    barWidth: 0
-  }),
-  moveBlockLeft = ref(undefined),
-  leftBarWidth = ref(undefined),
-  // 移动中样式
-  moveBlockBackgroundColor = ref(undefined),
-  leftBarBorderColor = ref('#ddd'),
-  iconColor = ref(undefined),
-  iconClass = ref('icon-right'),
-  status = ref(false), //鼠标状态
-  isEnd = ref(false), //是够验证完成
-  showRefresh = ref(true),
-  transitionLeft = ref(''),
-  transitionWidth = ref(''),
-  startLeft = ref(0)
+const secretKey = ref('') //后端返回的ase加密秘钥
+const passFlag = ref('') //是否通过的标识
+const backImgBase = ref('') //验证码背景图片
+const blockBackImgBase = ref('') //验证滑块的背景图片
+const backToken = ref('') //后端返回的唯一token值
+const startMoveTime = ref('') //移动开始的时间
+const endMovetime = ref('') //移动结束的时间
+const tipWords = ref('')
+const text = ref('')
+const finishText = ref('')
+const setSize = reactive({
+  imgHeight: 0,
+  imgWidth: 0,
+  barHeight: 0,
+  barWidth: 0
+})
+const moveBlockLeft = ref(undefined)
+const leftBarWidth = ref(undefined)
+// 移动中样式
+const moveBlockBackgroundColor = ref(undefined)
+const leftBarBorderColor = ref('#ddd')
+const iconColor = ref(undefined)
+const iconClass = ref('icon-right')
+const status = ref(false) //鼠标状态
+const isEnd = ref(false) //是够验证完成
+const showRefresh = ref(true)
+const transitionLeft = ref('')
+const transitionWidth = ref('')
+const startLeft = ref(0)
 
 const barArea = computed(() => {
   return proxy.$el.querySelector('.verify-bar-area')
@@ -297,7 +297,8 @@ const end = () => {
         : JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
       token: backToken.value
     }
-    checkCaptcha(data).then((res) => {
+    checkCaptcha(data).then((response) => {
+      const res = response.data
       if (res.repCode == '0000') {
         moveBlockBackgroundColor.value = '#5cb85c'
         leftBarBorderColor.value = '#5cb85c'
@@ -312,7 +313,7 @@ const end = () => {
           }, 1500)
         }
         passFlag.value = true
-        tipWords.value = `${((endMovetime.value - startMoveTime.value) / 1000).toFixed(2)}s 
+        tipWords.value = `${((endMovetime.value - startMoveTime.value) / 1000).toFixed(2)}s
             ${t('component.captcha.success')}`
         var captchaVerification = secretKey.value
           ? aesEncrypt(
@@ -375,13 +376,13 @@ const getPictrue = async () => {
     captchaType: captchaType.value
   }
   const res = await getCaptcha(data)
-  if (res.repCode == '0000') {
-    backImgBase.value = res.repData.originalImageBase64
-    blockBackImgBase.value = res.repData.jigsawImageBase64
-    backToken.value = res.repData.token
-    secretKey.value = res.repData.secretKey
+  if (res.data.repCode == '0000') {
+    backImgBase.value = res.data.repData.originalImageBase64
+    blockBackImgBase.value = 'data:image/png;base64,' + res.data.repData.jigsawImageBase64
+    backToken.value = res.data.repData.token
+    secretKey.value = res.data.repData.secretKey
   } else {
-    tipWords.value = res.repMsg
+    tipWords.value = res.data.repMsg
   }
 }
 </script>

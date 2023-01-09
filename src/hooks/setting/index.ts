@@ -9,7 +9,9 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     VITE_GLOB_API_URL,
     VITE_GLOB_APP_SHORT_NAME,
     VITE_GLOB_API_URL_PREFIX,
-    VITE_GLOB_UPLOAD_URL
+    VITE_GLOB_UPLOAD_URL,
+    VITE_GLOB_APP_TENANT_ENABLE,
+    VITE_GLOB_APP_CAPTCHA_ENABLE
   } = getAppEnvConfig()
 
   if (!/[a-zA-Z\_]*/.test(VITE_GLOB_APP_SHORT_NAME)) {
@@ -24,7 +26,9 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     apiUrl: VITE_GLOB_API_URL,
     shortName: VITE_GLOB_APP_SHORT_NAME,
     urlPrefix: VITE_GLOB_API_URL_PREFIX,
-    uploadUrl: VITE_GLOB_UPLOAD_URL
+    uploadUrl: VITE_GLOB_UPLOAD_URL,
+    tenantEnable: VITE_GLOB_APP_TENANT_ENABLE,
+    captchaEnable: VITE_GLOB_APP_CAPTCHA_ENABLE
   }
   return glob as Readonly<GlobConfig>
 }

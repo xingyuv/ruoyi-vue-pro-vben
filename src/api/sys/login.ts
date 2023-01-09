@@ -9,8 +9,8 @@ enum Api {
   LoginOut = '/system/auth/logout',
   GetUserInfo = '/system/auth/get-permission-info',
   GetAsyncRoutes = '/system/auth/list-menus',
-  GetCaptcha = 'system/captcha/get',
-  CheckCaptcha = 'system/captcha/check'
+  GetCaptcha = '/system/captcha/get',
+  CheckCaptcha = '/system/captcha/check'
 }
 
 // 登录
@@ -45,10 +45,10 @@ export const getAsyncRoutes = () => {
 
 // 获取验证图片  以及token
 export const getCaptcha = (data) => {
-  return defHttp.post({ url: Api.GetCaptcha, data }, { isTransformResponse: true })
+  return defHttp.post({ url: Api.GetCaptcha, data }, { isReturnNativeResponse: true })
 }
 
 // 滑动或者点选验证
 export const checkCaptcha = (data) => {
-  return defHttp.post({ url: Api.CheckCaptcha, data }, { isTransformResponse: true })
+  return defHttp.post({ url: Api.CheckCaptcha, data }, { isReturnNativeResponse: true })
 }
