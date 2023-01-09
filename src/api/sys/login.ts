@@ -1,5 +1,5 @@
 import { defHttp } from '@/utils/http/axios'
-import { TentantNameVO, UserLoginVO } from './model/loginModel'
+import { TentantNameVO } from './model/loginModel'
 import { getRefreshToken } from '@/utils/auth'
 
 enum Api {
@@ -11,11 +11,6 @@ enum Api {
   GetAsyncRoutes = '/system/auth/list-menus',
   GetCaptcha = '/system/captcha/get',
   CheckCaptcha = '/system/captcha/check'
-}
-
-// 登录
-export const loginApi = (data: UserLoginVO) => {
-  return defHttp.post({ url: Api.Login, data })
 }
 
 // 刷新访问令牌

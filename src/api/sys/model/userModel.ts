@@ -7,33 +7,28 @@ export interface LoginParams {
   captchaVerification: string
 }
 
-export interface RoleInfo {
-  roleName: string
-  value: string
-}
-
 /**
  * @description: Login interface return value
  */
 export interface LoginResultModel {
   userId: string | number
-  token: string
-  role: RoleInfo
+  accessToken: string
+  refreshToken: string
+  expiresTime: number
 }
 
 /**
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[]
+  roles: string[]
+  permissions: string[]
   // 用户id
-  userId: string | number
-  // 用户名
-  username: string
-  // 真实名字
-  realName: string
-  // 头像
+  user: userModel
+}
+
+export interface userModel {
+  id: string | number
   avatar: string
-  // 介绍
-  desc?: string
+  nickname: string
 }

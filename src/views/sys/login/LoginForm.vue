@@ -118,10 +118,10 @@ import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './use
 import { useGlobSetting } from '@/hooks/setting'
 import { useDesign } from '@/hooks/web/useDesign'
 
-import * as LoginApi from '@/api/sys/login'
 import * as authUtil from '@/utils/auth'
 
 import { Verify } from '@/components/Verifition'
+import { getTenantIdByName } from '@/api/sys/login'
 
 const ACol = Col
 const ARow = Row
@@ -173,7 +173,7 @@ async function getCode() {
 //获取租户ID
 async function getTenantId() {
   if (tenantEnable === 'true') {
-    const res = await LoginApi.getTenantIdByName(formData.tenantName)
+    const res = await getTenantIdByName(formData.tenantName)
     authUtil.setTenantId(res)
   }
 }
@@ -193,7 +193,7 @@ async function handleLogin(params) {
     if (userInfo) {
       notification.success({
         message: t('sys.login.loginSuccessTitle'),
-        description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+        description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.user.nickname}`,
         duration: 3
       })
     }
