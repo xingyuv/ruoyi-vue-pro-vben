@@ -4,9 +4,16 @@
 
 <h1>ruoyi-vue-pro-vben</h1>
 
-## 精简版地址
-[gitee](https://gitee.com/xingyu4j/vue-vben-admin/tree/thin/)
-[github](https://github.com/xingyu4j/vue-vben-admin/tree/thin)
+## 原项目地址
+[gitee](https://gitee.com/xingyu4j/vue-vben-admin)
+[github](https://github.com/xingyu4j/vue-vben-admin)
+
+## 后台
+[gitee](https://gitee.com/zhijiantianya/ruoyi-vue-pro)
+[github](https://github.com/YunaiV/ruoyi-vue-pro)
+
+## 预览地址
+[预览地址](http://vben.x-surge.com)
 </div>
 
 ## 简介
@@ -31,9 +38,6 @@
     <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview3.png">
 </p>
 
-## 预览地址
-
-[预览地址](http://vben.x-surge.com)
 
 ## 准备
 
