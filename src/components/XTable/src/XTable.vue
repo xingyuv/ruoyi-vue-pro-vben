@@ -137,12 +137,11 @@ const getProxyConfig = (options: XTableProps) => {
           if (options.params) {
             queryParams = Object.assign(queryParams, options.params)
           }
-          const { currentPage, pageSize } = page
           if (!options?.treeConfig) {
-            queryParams.pageSize = currentPage
-            queryParams.pageNo = pageSize
+            const { currentPage, pageSize } = page
+            queryParams.pageNo = currentPage
+            queryParams.pageSize = pageSize
           }
-
           return new Promise(async (resolve) => {
             resolve(await getListApi(queryParams))
           })
