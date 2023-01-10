@@ -5,6 +5,8 @@ import { error } from '@/utils/log'
 export interface tableMethod {
   reload: () => void
   setProps: (props: XTableProps) => void
+  deleteData: (ids: string | number) => void
+  exportList: (fileName?: string) => void
 }
 
 export const useXTable = (props: XTableProps): [Function, tableMethod] => {
@@ -23,7 +25,9 @@ export const useXTable = (props: XTableProps): [Function, tableMethod] => {
   }
   const methods: tableMethod = {
     reload: () => getInstance().reload(),
-    setProps: (props) => getInstance().setProps(props)
+    setProps: (props) => getInstance().setProps(props),
+    deleteData: (ids: string | number) => getInstance().deleteData(ids),
+    exportList: (fileName?: string) => getInstance().exportList(fileName)
   }
   return [register, methods]
 }

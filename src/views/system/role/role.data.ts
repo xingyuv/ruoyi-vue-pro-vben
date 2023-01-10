@@ -4,12 +4,13 @@ import { useCrudSchemas, VxeCrudSchema } from '@/hooks/web/useCrudSchemas'
 const crudSchema = reactive<VxeCrudSchema>({
   primaryKey: 'id',
   primaryType: 'seq',
-  primaryTitle: '岗位编号',
+  primaryTitle: '角色编号',
   action: true,
   columns: [
-    { field: 'name', title: '岗位名称', isSearch: true },
-    { field: 'code', title: '岗位编码', isSearch: true },
-    { field: 'sort', title: '岗位顺序' },
+    { field: 'name', title: '角色名称', isSearch: true },
+    { field: 'type', title: '角色类型', isSearch: true },
+    { field: 'code', title: '角色标识' },
+    { field: 'sort', title: '显示顺序' },
     {
       field: 'status',
       title: '状态',
@@ -35,7 +36,7 @@ const crudSchema = reactive<VxeCrudSchema>({
       }
     },
     { field: 'remark', title: '备注', isTable: false },
-    { field: 'createTime', title: '创建时间', formatter: 'formatDate', isForm: false }
+    { field: 'createTime', title: '创建时间', isForm: false }
   ]
 })
 
