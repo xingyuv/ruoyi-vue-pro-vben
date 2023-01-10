@@ -230,14 +230,15 @@ export const usePermissionStore = defineStore({
 
           //  Background routing to menu structure
           //  后台路由到菜单结构
-          const backMenuList = transformRouteToMenu(routeList)
+          const backMenuList = asyncRoutes
+          backMenuList.push(...transformRouteToMenu(routeList))
           this.setBackMenuList(backMenuList)
 
           // remove meta.ignoreRoute item
           // 删除 meta.ignoreRoute 项
+          routeList.push(...asyncRoutes)
           routeList = filter(routeList, routeRemoveIgnoreFilter)
           routeList = routeList.filter(routeRemoveIgnoreFilter)
-
           routeList = flatMultiLevelRoutes(routeList)
           routes = [PAGE_NOT_FOUND_ROUTE, ...routeList]
           break

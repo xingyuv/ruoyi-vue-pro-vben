@@ -185,9 +185,9 @@ function isMultipleRoute(routeModule: AppRouteModule) {
 
 function buildMeta(route: AppRouteModule) {
   const meta = route.meta || {}
-  meta.title = route.name
-  meta.icon = route.icon
-  meta.hidden = !route.visible
-  meta.noCache = !route.keepAlive
+  meta.title = meta.title || route.name
+  meta.icon = meta.icon || route.icon
+  meta.hidden = route.visible ? !route.visible : false
+  meta.noCache = route.keepAlive ? !route.keepAlive : false
   return meta
 }
