@@ -30,7 +30,7 @@ const setting: ProjectConfig = {
   // ROUTE_MAPPING: 前端模式（菜单由路由生成，默认）
   // ROLE：前端模式（菜单路由分开）
   // BACK: 后端模式
-  permissionMode: PermissionModeEnum.ROUTE_MAPPING,
+  permissionMode: PermissionModeEnum.BACK,
   // 权限缓存存放位置。默认存放于localStorage
   permissionCacheType: CacheTypeEnum.LOCAL,
   // 会话超时处理方案

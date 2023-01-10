@@ -39,7 +39,7 @@ const { prefixCls } = useDesign('header-lock-modal')
 const userStore = useUserStore()
 const lockStore = useLockStore()
 
-const getRealName = computed(() => userStore.getUserInfo?.realName)
+const getRealName = computed(() => userStore.getUserInfo?.user.nickname)
 const [register, { closeModal }] = useModalInner()
 
 const [registerForm, { validateFields, resetFields }] = useForm({
@@ -70,7 +70,7 @@ async function handleLock() {
 }
 
 const avatar = computed(() => {
-  const { avatar } = userStore.getUserInfo
+  const { avatar } = userStore.getUserInfo.user
   return avatar || headerImg
 })
 </script>
