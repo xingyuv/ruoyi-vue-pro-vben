@@ -7,11 +7,11 @@ import { useUserStoreWithOut } from '@/store/modules/user'
 
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 
-import { RootRoute } from '@/router/routes'
+// import { RootRoute } from '@/router/routes'
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN
 
-const ROOT_PATH = RootRoute.path
+// const ROOT_PATH = RootRoute.path
 
 const whitePathList: PageEnum[] = [LOGIN_PATH]
 
@@ -19,17 +19,17 @@ export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut()
   const permissionStore = usePermissionStoreWithOut()
   router.beforeEach(async (to, from, next) => {
-    if (
-      from.path === ROOT_PATH &&
-      to.path === PageEnum.BASE_HOME &&
-      userStore.getUserInfo.homePath &&
-      userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
-    ) {
-      next(userStore.getUserInfo.homePath)
-      return
-    }
+    // if (
+    //   from.path === ROOT_PATH &&
+    //   to.path === PageEnum.BASE_HOME &&
+    //   userStore.getUserInfo.homePath &&
+    //   userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
+    // ) {
+    //   next(userStore.getUserInfo.homePath)
+    //   return
+    // }
 
-    const token = userStore.getToken
+    const token = userStore.getAccessToken
 
     // Whitelist can be directly entered
     if (whitePathList.includes(to.path as PageEnum)) {
@@ -74,9 +74,9 @@ export function createPermissionGuard(router: Router) {
     if (
       from.path === LOGIN_PATH &&
       to.name === PAGE_NOT_FOUND_ROUTE.name &&
-      to.fullPath !== (userStore.getUserInfo.homePath || PageEnum.BASE_HOME)
+      to.fullPath !== PageEnum.BASE_HOME
     ) {
-      next(userStore.getUserInfo.homePath || PageEnum.BASE_HOME)
+      next(PageEnum.BASE_HOME)
       return
     }
 
