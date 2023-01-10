@@ -191,6 +191,10 @@ export class VAxios {
     return this.request({ ...config, method: 'DELETE' }, options)
   }
 
+  download<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+    return this.request({ ...config, method: 'DELETE', responseType: 'blob' }, options)
+  }
+
   request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     let conf: CreateAxiosOptions = cloneDeep(config)
     const transform = this.getTransform()
