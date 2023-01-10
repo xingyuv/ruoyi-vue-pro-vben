@@ -121,13 +121,14 @@ const getColumnsConfig = (options: XTableProps) => {
 
 // 动态请求
 const getProxyConfig = (options: XTableProps) => {
-  const { getListApi, proxyConfig, data, afterFetch } = options
+  const { getListApi, proxyConfig, data } = options
   if (proxyConfig || data) return
   if (getListApi && isFunction(getListApi)) {
     options.proxyConfig = {
+      seq: true,
       form: proxyForm,
       props: {
-        result: 'items', // 配置响应结果列表字段
+        result: 'list', // 配置响应结果列表字段
         total: 'total' // 配置响应结果总页数字段
       },
       ajax: {
@@ -139,14 +140,12 @@ const getProxyConfig = (options: XTableProps) => {
           const { currentPage, pageSize } = page
           if (!options?.treeConfig) {
             queryParams.pageSize = currentPage
-            queryParams.page = pageSize
+            queryParams.pageNo = pageSize
           }
 
-          let res = await getListApi({ queryParams })
-          if (afterFetch && isFunction(afterFetch)) {
-            res = afterFetch(res)
-          }
-          return res || []
+          return new Promise(async (resolve) => {
+            resolve(await getListApi(queryParams))
+          })
         }
       }
     }

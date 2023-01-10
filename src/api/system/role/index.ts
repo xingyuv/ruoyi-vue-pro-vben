@@ -23,36 +23,36 @@ export interface UpdateStatusReqVO {
 }
 
 // 查询角色列表
-export const getRolePageApi = async (params: RolePageReqVO) => {
+export const getRolePageApi = (params: RolePageReqVO) => {
   return defHttp.get({ url: '/system/role/page', params })
 }
 
 // 查询角色（精简)列表
-export const listSimpleRolesApi = async () => {
+export const listSimpleRolesApi = () => {
   return defHttp.get({ url: '/system/role/list-all-simple' })
 }
 
 // 查询角色详情
-export const getRoleApi = async (id: number) => {
+export const getRoleApi = (id: number) => {
   return defHttp.get({ url: '/system/role/get?id=' + id })
 }
 
 // 新增角色
-export const createRoleApi = async (data: RoleVO) => {
+export const createRoleApi = (data: RoleVO) => {
   return defHttp.post({ url: '/system/role/create', data })
 }
 
 // 修改角色
-export const updateRoleApi = async (data: RoleVO) => {
+export const updateRoleApi = (data: RoleVO) => {
   return defHttp.put({ url: '/system/role/update', data })
 }
 
 // 修改角色状态
-export const updateRoleStatusApi = async (data: UpdateStatusReqVO) => {
+export const updateRoleStatusApi = (data: UpdateStatusReqVO) => {
   return defHttp.put({ url: '/system/role/update-status', data })
 }
 
 // 删除角色
-export const deleteRoleApi = async (id: number) => {
+export const deleteRoleApi = (id: number) => {
   return defHttp.delete({ url: '/system/role/delete?id=' + id })
 }
