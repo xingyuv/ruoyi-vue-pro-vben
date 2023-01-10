@@ -35,7 +35,7 @@ const crudSchema = reactive<VxeCrudSchema>({
       }
     },
     { field: 'remark', title: '备注', isTable: false },
-    { field: 'createTime', title: '创建时间' }
+    { field: 'createTime', title: '创建时间', isForm: false }
   ]
 })
 

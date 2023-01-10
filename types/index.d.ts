@@ -13,6 +13,11 @@ declare interface PageParam {
   pageNo?: number
 }
 
+declare interface PageResult<T = any> {
+  list: T[]
+  total: number
+}
+
 declare type LabelValueOptions = {
   label: string
   value: any

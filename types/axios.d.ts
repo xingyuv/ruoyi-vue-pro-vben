@@ -35,6 +35,7 @@ export interface RetryRequest {
   count: number
   waitTime: number
 }
+
 export interface Result<T = any> {
   code: number
   msg: string

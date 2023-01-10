@@ -24,7 +24,7 @@ export interface PostExportReqVO {
 
 // 查询岗位列表
 export const getPostPageApi = (params: PostPageReqVO) => {
-  return defHttp.get<PostVO[]>({ url: '/system/post/page', params })
+  return defHttp.get<PageResult<PostVO>>({ url: '/system/post/page', params })
 }
 
 // 获取岗位精简信息列表
