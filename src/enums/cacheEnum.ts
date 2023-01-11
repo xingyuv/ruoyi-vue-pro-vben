@@ -16,6 +16,9 @@ export const ROLES_KEY = 'ROLES__KEY__'
 // project config key
 export const PROJ_CFG_KEY = 'PROJ__CFG__KEY__'
 
+// dict info key
+export const DICT_KEY = 'DICT__KEY__'
+
 // lock info
 export const LOCK_INFO_KEY = 'LOCK__INFO__KEY__'
 

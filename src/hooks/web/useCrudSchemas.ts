@@ -11,6 +11,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { FormSchema } from '@/components/Form'
 import { VxeTableColumn } from '@/components/XTable'
 import { DescItem } from '@/components/Description'
+import { getBoolDictOptions, getDictOptions, getIntDictOptions } from '@/utils/dict'
 
 export type VxeCrudSchema = {
   primaryKey?: string // 主键ID
@@ -118,18 +119,33 @@ const filterSearchSchema = (crudSchema: VxeCrudSchema): VxeFormItemProps[] => {
   eachTree(crudSchema.columns, (schemaItem: VxeCrudColumns) => {
     // 判断是否显示
     if (schemaItem?.isSearch || schemaItem.search?.show) {
-      const itemRenderName = schemaItem?.search?.itemRender?.name || '$input'
+      let itemRenderName = schemaItem?.search?.itemRender?.name || '$input'
       let itemRender: FormItemRenderOptions = {}
-
-      if (schemaItem.search?.itemRender) {
-        itemRender = schemaItem.search.itemRender
-      } else {
+      const options: any[] = []
+      if (schemaItem.dictType) {
+        const allOptions = { label: t('common.allOptionText'), value: '' }
+        options.push(allOptions)
+        getDictOptions(schemaItem.dictType).forEach((dict) => {
+          options.push(dict)
+        })
+        itemRender.options = options
+        if (!schemaItem?.search?.itemRender?.name) itemRenderName = '$select'
         itemRender = {
           name: itemRenderName,
-          props:
-            itemRenderName == '$input'
-              ? { placeholder: t('common.inputText') }
-              : { placeholder: t('common.chooseText') }
+          options: options,
+          props: { placeholder: t('common.chooseText') }
+        }
+      } else {
+        if (schemaItem.search?.itemRender) {
+          itemRender = schemaItem.search.itemRender
+        } else {
+          itemRender = {
+            name: itemRenderName,
+            props:
+              itemRenderName == '$input'
+                ? { placeholder: t('common.inputText') }
+                : { placeholder: t('common.chooseText') }
+          }
         }
       }
       const searchSchemaItem = {
@@ -200,6 +216,13 @@ const filterTableSchema = (crudSchema: VxeCrudSchema): VxeGridPropTypes.Columns 
         tableSchemaItem.formatter = schemaItem.formatter
         tableSchemaItem.width = tableSchemaItem.width ? tableSchemaItem.width : 160
       }
+      if (schemaItem?.dictType) {
+        tableSchemaItem.cellRender = {
+          name: 'XDict',
+          content: schemaItem.dictType
+        }
+        tableSchemaItem.width = tableSchemaItem.width ? tableSchemaItem.width : 160
+      }
       tableSchema.push(tableSchemaItem)
     }
   })
@@ -227,13 +250,36 @@ const filterFormSchema = (crudSchema: VxeCrudSchema): FormSchema[] => {
     // 判断是否显示
     if (schemaItem?.isForm !== false && schemaItem?.form?.show !== false) {
       // 默认为 input
+      let component = schemaItem?.form?.component || 'Input'
+      let comonentProps: any = {}
+      if (schemaItem.dictType) {
+        const options: any[] = []
+        if (schemaItem.dictClass && schemaItem.dictClass === 'number') {
+          getIntDictOptions(schemaItem.dictType).forEach((dict) => {
+            options.push(dict)
+          })
+        } else if (schemaItem.dictClass && schemaItem.dictClass === 'boolean') {
+          getBoolDictOptions(schemaItem.dictType).forEach((dict) => {
+            options.push(dict)
+          })
+        } else {
+          getDictOptions(schemaItem.dictType).forEach((dict) => {
+            options.push(dict)
+          })
+        }
+        comonentProps = {
+          options: options
+        }
+        if (!(schemaItem.form && schemaItem.form.component)) component = 'Select'
+      }
+      // 默认为 input
       const formSchemaItem: FormSchema = {
+        component: component,
+        componentProps: comonentProps,
         ...schemaItem.form,
-        component: schemaItem?.form?.component ? schemaItem.form.component : 'Input',
         field: schemaItem.field,
         label: (schemaItem.form?.label || schemaItem.title) as string
       }
-
       formSchema.push(formSchemaItem)
     }
   })

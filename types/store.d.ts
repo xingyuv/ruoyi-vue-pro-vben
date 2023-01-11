@@ -45,3 +45,8 @@ export interface BeforeMiniState {
   menuMode?: MenuModeEnum
   menuType?: MenuTypeEnum
 }
+
+export interface DictState {
+  dictMap: Map<string, any>
+  isSetDict: boolean
+}

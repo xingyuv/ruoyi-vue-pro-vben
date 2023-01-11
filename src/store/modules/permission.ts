@@ -1,27 +1,22 @@
 import type { AppRouteRecordRaw, Menu } from '@/router/types'
 
+import { toRaw } from 'vue'
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import { useI18n } from '@/hooks/web/useI18n'
+
 import { useUserStore } from './user'
 import { useAppStoreWithOut } from './app'
-import { toRaw } from 'vue'
-import { transformObjToRoute, flatMultiLevelRoutes } from '@/router/helper/routeHelper'
-import { transformRouteToMenu } from '@/router/helper/menuHelper'
-
-import projectSetting from '@/settings/projectSetting'
-
-import { PermissionModeEnum } from '@/enums/appEnum'
-
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
-
-import { filter } from '@/utils/helper/treeHelper'
-
-import { getMenuList } from '@/api/sys/menu'
-
+import { transformRouteToMenu } from '@/router/helper/menuHelper'
+import { transformObjToRoute, flatMultiLevelRoutes } from '@/router/helper/routeHelper'
+import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
+import { filter } from '@/utils/helper/treeHelper'
+import projectSetting from '@/settings/projectSetting'
+import { getMenuList } from '@/api/sys/menu'
 import { PageEnum } from '@/enums/pageEnum'
+import { PermissionModeEnum } from '@/enums/appEnum'
 
 interface PermissionState {
   // Permission code list

@@ -13,6 +13,7 @@ export default {
   searchText: '搜索',
   queryText: '查询',
 
+  allOptionText: '全部',
   inputText: '请输入',
   chooseText: '请选择',
 

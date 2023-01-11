@@ -13,6 +13,7 @@ export default {
   searchText: 'Search',
   queryText: 'Search',
 
+  allOptionText: 'All',
   inputText: 'Please enter',
   chooseText: 'Please choose',
 
