@@ -23,6 +23,14 @@
 - 使用了最新的`Vue3`,`Vite4`,`Antdv3`,`TypeScript`,`Pinia`等主流技术开发，开箱即用的中后台前端解决方案。
 - 封装 vxe-table 详见 系统管理-角色管理等(views/demo/system/...)
 
+## 开发进度
+- axios token刷新 未完成
+- router 增加基础首页 未完成
+- 系统管理 页面适配 进行中
+- 基础设施 页面适配 未完成
+- 支付管理 页面适配 未完成
+- 工作流   页面适配 未完成
+
 ## 特性
 
 - **最新技术栈**：使用 Vue3/vite4/antdv3/vxeTable 等前端前沿技术开发
