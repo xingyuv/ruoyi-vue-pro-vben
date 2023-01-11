@@ -12,14 +12,13 @@ import { isBoolean, isFunction } from '@/utils/is'
 import { SizeType, VxeGridInstance } from 'vxe-table'
 import { ThemeEnum } from '@/enums/appEnum'
 import { useAppStore } from '@/store/modules/app'
-import { useFormats, useInterceptor } from './hooks'
+import { useInterceptor } from './hooks'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useMessage } from '@/hooks/web/useMessage'
 import { downloadByData } from '@/utils/file/download'
 
 useInterceptor()
-useFormats()
 
 const { t } = useI18n()
 const appStore = useAppStore()
