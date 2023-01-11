@@ -2,12 +2,16 @@
   <PageWrapper>
     <XTable @register="registerTable">
       <template #toolbar_buttons>
-        <a-button type="primary" @click="handleCreate()"> 新增岗位 </a-button>
+        <a-button type="primary" @click="handleModel('create')"> 新增岗位 </a-button>
         <a-button type="warning" class="ml-2" @click="exportList('岗位列表.xls')"> 导出 </a-button>
       </template>
       <template #actionbtns_default="{ row }">
-        <a-button type="link" preIcon="clarity:note-edit-line" @click="handleEdit(row.id)" />
-        <a-button type="link" preIcon="ep:view" @click="handleDetail(row.id)" />
+        <a-button
+          type="link"
+          preIcon="clarity:note-edit-line"
+          @click="handleModel('edit', row.id)"
+        />
+        <a-button type="link" preIcon="ep:view" @click="handleModel('detail', row.id)" />
         <a-button type="link" preIcon="ant-design:delete-outlined" @click="deleteData(row.id)" />
       </template>
     </XTable>
@@ -31,30 +35,14 @@ const [registerTable, { reload, deleteData, exportList }] = useXTable({
   pagination: true
 })
 
-function handleCreate() {
-  openModal(true, {
-    isForm: true,
-    isUpdate: false
-  })
-}
-
-function handleEdit(rowId: number) {
+function handleModel(type: string, rowId?: number) {
   openModal(true, {
     rowId,
-    isForm: true,
-    isUpdate: true
+    type: type
   })
 }
 
-function handleDetail(rowId: number) {
-  openModal(true, {
-    rowId,
-    isForm: false,
-    isUpdate: true
-  })
-}
-
-async function handleSuccess() {
+function handleSuccess() {
   reload()
 }
 </script>

@@ -264,7 +264,9 @@ export function useFormEvents({
    */
   function itemIsDateType(key: string) {
     return unref(getSchema).some((item) => {
-      return item.field === key ? dateItemType.includes(item.component) : false
+      return item.field === key
+        ? dateItemType.includes(item.component ? item.component : 'Input')
+        : false
     })
   }
 

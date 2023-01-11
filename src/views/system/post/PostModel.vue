@@ -1,23 +1,35 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicModal v-bind="$attrs" @register="registerModal" :title="title" @ok="handleSubmit">
     <BasicForm v-if="isForm" @register="registerForm" />
-    <Description v-if="!isForm" :column="1" :data="formData" :schema="allSchemas.detailSchema" />
+    <Description v-if="!isForm" :data="formData" :schema="allSchemas.detailSchema" />
   </BasicModal>
 </template>
 <script lang="ts" setup name="PostModel">
-import { ref, computed, unref } from 'vue'
+import { ref } from 'vue'
 import { BasicModal, useModalInner } from '@/components/Modal'
 import { BasicForm, useForm } from '@/components/Form'
 import { Description } from '@/components/Description'
 import { allSchemas } from './post.data'
 import * as PostApi from '@/api/system/post'
+import { useI18n } from '@/hooks/web/useI18n'
+
+const { t } = useI18n()
 
 const emit = defineEmits(['success', 'register'])
 
 const isForm = ref(true)
-const isUpdate = ref(true)
-const rowId = ref('')
+const rowId = ref(0)
 const formData = ref({})
+const title = ref('')
+
+function initTitle(type: string) {
+  title.value = t('action.' + type)
+  if (type == 'detail') {
+    isForm.value = false
+  } else {
+    isForm.value = true
+  }
+}
 
 const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
   labelWidth: 100,
@@ -32,10 +44,8 @@ const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
 const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
   resetFields()
   setModalProps({ confirmLoading: false })
-  isUpdate.value = !!data?.isUpdate
-  isForm.value = !!data?.isForm
-
-  if (unref(isUpdate)) {
+  initTitle(data.type)
+  if (data.rowId) {
     rowId.value = data.rowId
     const res = await PostApi.getPostApi(data.rowId)
     formData.value = res
@@ -45,15 +55,11 @@ const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data
   }
 })
 
-const getTitle = computed(() =>
-  isForm.value ? (!unref(isUpdate) ? '新增岗位' : '编辑岗位') : '岗位详情'
-)
-
 async function handleSubmit() {
   try {
     const values = await validate()
     setModalProps({ confirmLoading: true })
-    if (isUpdate.value) {
+    if (rowId.value != 0) {
       values.id = rowId.value
       await PostApi.updatePostApi(values)
     } else {

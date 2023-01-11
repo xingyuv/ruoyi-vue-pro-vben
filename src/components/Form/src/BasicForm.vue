@@ -118,7 +118,7 @@ const getSchema = computed((): FormSchema[] => {
   for (const schema of schemas) {
     const { defaultValue, component, isHandleDateDefaultValue = true } = schema
     // handle date type
-    if (isHandleDateDefaultValue && defaultValue && dateItemType.includes(component)) {
+    if (isHandleDateDefaultValue && defaultValue && component && dateItemType.includes(component)) {
       if (!Array.isArray(defaultValue)) {
         schema.defaultValue = dateUtil(defaultValue)
       } else {

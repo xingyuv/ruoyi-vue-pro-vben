@@ -43,7 +43,7 @@ export const basicProps = {
   submitOnChange: propTypes.bool,
   size: propTypes.oneOf(['default', 'small', 'large']).def('default'),
   // 禁用表单
-  disabled: propTypes.bool,
+  disabled: propTypes.bool.def(false),
   emptySpan: {
     type: [Number, Object] as PropType<number | Recordable>,
     default: 0
