@@ -95,6 +95,7 @@ export const useCrudSchemas = (
   allSchemas.tableSchema = tableSchema || []
 
   const formSchema = filterFormSchema(crudSchema)
+  // @ts-ignore
   allSchemas.formSchema = formSchema
 
   const detailSchema = filterDescItem(crudSchema)
@@ -195,7 +196,10 @@ const filterTableSchema = (crudSchema: VxeCrudSchema): VxeGridPropTypes.Columns 
         minWidth: '80px'
       }
       tableSchemaItem.showOverflow = 'tooltip'
-
+      if (schemaItem?.formatter) {
+        tableSchemaItem.formatter = schemaItem.formatter
+        tableSchemaItem.width = tableSchemaItem.width ? tableSchemaItem.width : 160
+      }
       tableSchema.push(tableSchemaItem)
     }
   })

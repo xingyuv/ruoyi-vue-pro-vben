@@ -85,6 +85,7 @@ const { prefixCls } = useDesign('basic-form')
 
 // Get the basic configuration of the form
 const getProps = computed((): FormProps => {
+  // @ts-ignore
   let mergeProps = { ...props, ...unref(propsRef) } as FormProps
   if (mergeProps.labelWidth) {
     mergeProps.labelCol = undefined
