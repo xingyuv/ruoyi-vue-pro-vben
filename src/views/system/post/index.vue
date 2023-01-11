@@ -54,12 +54,7 @@ function handleDetail(rowId: number) {
   })
 }
 
-async function handleSuccess(data) {
-  if (!!data?.isUpdate) {
-    await PostApi.updatePostApi(data.values)
-  } else {
-    await PostApi.createPostApi(data.values)
-  }
+async function handleSuccess() {
   reload()
 }
 </script>

@@ -14,9 +14,9 @@ import * as PostApi from '@/api/system/post'
 
 const emit = defineEmits(['success', 'register'])
 
+const isForm = ref(true)
 const isUpdate = ref(true)
 const rowId = ref('')
-const isForm = ref(true)
 const formData = ref({})
 
 const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
@@ -45,14 +45,22 @@ const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data
   }
 })
 
-const getTitle = computed(() => (!unref(isUpdate) ? '新增岗位' : '编辑岗位'))
+const getTitle = computed(() =>
+  isForm.value ? (!unref(isUpdate) ? '新增岗位' : '编辑岗位') : '岗位详情'
+)
 
 async function handleSubmit() {
   try {
     const values = await validate()
     setModalProps({ confirmLoading: true })
+    if (isUpdate.value) {
+      values.id = rowId.value
+      await PostApi.updatePostApi(values)
+    } else {
+      await PostApi.createPostApi(values)
+    }
     closeModal()
-    emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } })
+    emit('success')
   } finally {
     setModalProps({ confirmLoading: false })
   }
