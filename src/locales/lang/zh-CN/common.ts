@@ -7,6 +7,8 @@ export default {
   loadingText: '加载中...',
   saveText: '保存',
   delText: '删除',
+  delSuccessText: '删除成功',
+  exportSuccessText: '导出成功',
   resetText: '重置',
   searchText: '搜索',
   queryText: '查询',

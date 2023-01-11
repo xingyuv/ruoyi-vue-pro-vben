@@ -192,7 +192,7 @@ export class VAxios {
   }
 
   download<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    return this.request({ ...config, method: 'DELETE', responseType: 'blob' }, options)
+    return this.request({ ...config, method: 'GET', responseType: 'blob' }, options)
   }
 
   request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {

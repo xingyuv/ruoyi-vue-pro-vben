@@ -35,6 +35,10 @@ const transform: AxiosTransform = {
   transformResponseHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
     const { t } = useI18n()
     const { isTransformResponse, isReturnNativeResponse } = options
+    // 二进制数据则直接返回
+    if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
+      return res.data
+    }
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {
       return res
@@ -78,7 +82,7 @@ const transform: AxiosTransform = {
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
     switch (code) {
-      case ResultEnum.TIMEOUT:
+      case ResultEnum.UNAUTHORIZED:
         timeoutMsg = t('sys.api.timeoutMessage')
         const userStore = useUserStoreWithOut()
         userStore.setAccessToken(undefined)

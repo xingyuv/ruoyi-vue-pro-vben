@@ -7,6 +7,8 @@ export default {
   loadingText: 'Loading...',
   saveText: 'Save',
   delText: 'Delete',
+  delSuccessText: 'Delete success',
+  exportSuccessText: 'Export success',
   resetText: 'Reset',
   searchText: 'Search',
   queryText: 'Search',

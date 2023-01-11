@@ -13,13 +13,20 @@ import { SizeType, VxeGridInstance } from 'vxe-table'
 import { ThemeEnum } from '@/enums/appEnum'
 import { useAppStore } from '@/store/modules/app'
 import { useFormats, useInterceptor } from './hooks'
+import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
+import { useMessage } from '@/hooks/web/useMessage'
+import { downloadByData } from '@/utils/file/download'
 
 useInterceptor()
 useFormats()
 
+const { t } = useI18n()
 const appStore = useAppStore()
+const { createMessage, createConfirm } = useMessage()
+
 const { prefixCls } = useDesign('x-vxe-table')
+
 watch(
   () => appStore.getDarkMode,
   () => {
@@ -77,23 +84,6 @@ const getProps = computed(() => {
 
 const xGrid = ref<VxeGridInstance>() // 列表 Grid Ref
 
-const reload = () => {
-  const g = unref(xGrid)
-  if (!g) {
-    return
-  }
-  g.commitProxy('query')
-}
-
-const getSearchData = () => {
-  const g = unref(xGrid)
-  if (!g) {
-    return
-  }
-  const queryParams = Object.assign({}, JSON.parse(JSON.stringify(g.getProxyInfo()?.form)))
-  return queryParams
-}
-
 let proxyForm = false
 
 // columns
@@ -121,32 +111,70 @@ const getColumnsConfig = (options: XTableProps) => {
 
 // 动态请求
 const getProxyConfig = (options: XTableProps) => {
-  const { getListApi, proxyConfig, data } = options
+  const { getListApi, proxyConfig, data, isList } = options
   if (proxyConfig || data) return
   if (getListApi && isFunction(getListApi)) {
-    options.proxyConfig = {
-      seq: true,
-      form: proxyForm,
-      props: {
-        result: 'list', // 配置响应结果列表字段
-        total: 'total' // 配置响应结果总页数字段
-      },
-      ajax: {
-        query: async ({ page, form }) => {
-          let queryParams: any = Object.assign({}, JSON.parse(JSON.stringify(form)))
-          if (options.params) {
-            queryParams = Object.assign(queryParams, options.params)
+    if (!isList) {
+      options.proxyConfig = {
+        seq: true,
+        form: proxyForm,
+        props: {
+          result: 'list', // 配置响应结果列表字段
+          total: 'total' // 配置响应结果总页数字段
+        },
+        ajax: {
+          query: async ({ page, form }) => {
+            let queryParams: any = Object.assign({}, JSON.parse(JSON.stringify(form)))
+            if (options.params) {
+              queryParams = Object.assign(queryParams, options.params)
+            }
+            if (!options?.treeConfig) {
+              const { currentPage, pageSize } = page
+              queryParams.pageNo = currentPage
+              queryParams.pageSize = pageSize
+            }
+            return new Promise(async (resolve) => {
+              resolve(await getListApi(queryParams))
+            })
+          },
+          delete: ({ body }) => {
+            return new Promise(async (resolve) => {
+              if (options.deleteApi) {
+                resolve(await options.deleteApi(JSON.stringify(body)))
+              } else {
+                Promise.reject('未设置deleteApi')
+              }
+            })
           }
-          if (!options?.treeConfig) {
-            const { currentPage, pageSize } = page
-            queryParams.pageNo = currentPage
-            queryParams.pageSize = pageSize
-          }
-          return new Promise(async (resolve) => {
-            resolve(await getListApi(queryParams))
-          })
         }
       }
+    } else {
+      options.proxyConfig = {
+        seq: true, // 启用动态序号代理（分页之后索引自动计算为当前页的起始序号）
+        form: true, // 启用表单代理，当点击表单提交按钮时会自动触发 reload 行为
+        props: { result: 'data' },
+        ajax: {
+          query: ({ form }) => {
+            let queryParams: any = Object.assign({}, JSON.parse(JSON.stringify(form)))
+            if (options?.params) {
+              queryParams = Object.assign(queryParams, options.params)
+            }
+            return new Promise(async (resolve) => {
+              resolve(await getListApi(queryParams))
+            })
+          }
+        }
+      }
+    }
+  }
+  if (options.exportListApi) {
+    options.exportConfig = {
+      filename: options?.exportName,
+      // 默认选中类型
+      type: 'csv',
+      // 自定义数据量列表
+      modes: options?.getAllListApi ? ['current', 'all'] : ['current'],
+      columns: options?.allSchemas?.printSchema
     }
   }
 }
@@ -202,11 +230,78 @@ const getToolBarConfig = (options: XTableProps) => {
   }
 }
 
+const reload = () => {
+  const g = unref(xGrid)
+  if (!g) {
+    return
+  }
+  g.commitProxy('query')
+}
+
+const getSearchData = () => {
+  const g = unref(xGrid)
+  if (!g) {
+    return
+  }
+  const queryParams = Object.assign({}, JSON.parse(JSON.stringify(g.getProxyInfo()?.form)))
+  return queryParams
+}
+
 const setProps = (prop: Partial<XTableProps>) => {
   innerProps.value = { ...unref(innerProps), ...prop }
 }
-defineExpose({ reload, Ref: xGrid, getSearchData })
-emit('register', { reload, getSearchData, setProps })
+// 删除
+const deleteData = async (ids: string | number) => {
+  const g = unref(xGrid)
+  if (!g) {
+    return
+  }
+  const options = innerProps.value || props.options
+  if (!options.deleteApi) {
+    console.error('未传入delListApi')
+    return
+  }
+  return new Promise(async () => {
+    createConfirm({
+      title: '删除',
+      iconType: 'warning',
+      content: '是否确认要删除数据？',
+      async onOk() {
+        await (options?.deleteApi && options?.deleteApi(ids))
+        createMessage.success(t('common.delSuccessText'))
+        // 刷新列表
+        reload()
+      }
+    })
+  })
+}
+
+// 导出
+const exportList = async (fileName?: string) => {
+  const g = unref(xGrid)
+  if (!g) {
+    return
+  }
+  const options = innerProps.value || props.options
+  if (!options?.exportListApi) {
+    console.error('未传入exportListApi')
+    return
+  }
+  const queryParams = Object.assign({}, JSON.parse(JSON.stringify(g.getProxyInfo()?.form)))
+  createConfirm({
+    title: '导出',
+    iconType: 'warning',
+    content: '是否要导出数据？',
+    async onOk() {
+      const res = await (options?.exportListApi && options?.exportListApi(queryParams))
+      createMessage.success(t('common.exportSuccessText'))
+      // 刷新列表
+      downloadByData(res as unknown as Blob, fileName ? fileName : 'excel.xls')
+    }
+  })
+}
+defineExpose({ reload, Ref: xGrid, getSearchData, deleteData, exportList })
+emit('register', { reload, getSearchData, setProps, deleteData, exportList })
 </script>
 <style lang="less">
 @import url('./theme/index.less');

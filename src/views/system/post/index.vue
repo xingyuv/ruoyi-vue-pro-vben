@@ -7,7 +7,7 @@
       </template>
       <template #actionbtns_default="{ row }">
         <a-button type="link" preIcon="clarity:note-edit-line" @click="handleEdit(row.id)" />
-        <a-button type="link" preIcon="ep:view" @click="handleEdit(row.id)" />
+        <a-button type="link" preIcon="ep:view" @click="handleDetail(row.id)" />
         <a-button type="link" preIcon="ant-design:delete-outlined" @click="deleteData(row.id)" />
       </template>
     </XTable>
@@ -33,6 +33,7 @@ const [registerTable, { reload, deleteData, exportList }] = useXTable({
 
 function handleCreate() {
   openModal(true, {
+    isForm: true,
     isUpdate: false
   })
 }
@@ -40,11 +41,25 @@ function handleCreate() {
 function handleEdit(rowId: number) {
   openModal(true, {
     rowId,
+    isForm: true,
     isUpdate: true
   })
 }
 
-function handleSuccess() {
+function handleDetail(rowId: number) {
+  openModal(true, {
+    rowId,
+    isForm: false,
+    isUpdate: true
+  })
+}
+
+async function handleSuccess(data) {
+  if (!!data?.isUpdate) {
+    await PostApi.updatePostApi(data.values)
+  } else {
+    await PostApi.createPostApi(data.values)
+  }
   reload()
 }
 </script>
