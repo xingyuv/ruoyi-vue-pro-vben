@@ -13,14 +13,14 @@ import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting'
 import { useUserStoreWithOut } from '@/store/modules/user'
 import { SettingButtonPositionEnum } from '@/enums/appEnum'
 import { createAsyncComponent } from '@/utils/factory/createAsyncComponent'
-import SessionTimeoutLogin from '@/views/sys/login/SessionTimeoutLogin.vue'
+import SessionTimeoutLogin from '@/views/base/login/SessionTimeoutLogin.vue'
 
 const { getUseOpenBackTop, getShowSettingButton, getSettingButtonPosition, getFullContent } =
   useRootSetting()
 const userStore = useUserStoreWithOut()
 const { prefixCls } = useDesign('setting-drawer-feature')
 const { getShowHeader } = useHeaderSetting()
-const LayoutLockPage = createAsyncComponent(() => import('@/views/sys/lock/index.vue'))
+const LayoutLockPage = createAsyncComponent(() => import('@/views/base/lock/index.vue'))
 const SettingDrawer = createAsyncComponent(() => import('@/layouts/default/setting/index.vue'))
 const getTarget = () => document.body
 const getIsSessionTimeout = computed(() => userStore.getSessionTimeout)
