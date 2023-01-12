@@ -18,7 +18,7 @@
     <PostModel @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
-<script setup lang="ts" name="RoleManagement">
+<script setup lang="ts" name="Post">
 import PostModel from './PostModel.vue'
 import { useModal } from '@/components/Modal'
 import { PageWrapper } from '@/components/Page'

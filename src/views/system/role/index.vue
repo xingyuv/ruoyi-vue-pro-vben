@@ -13,7 +13,7 @@
     <RoleModel @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
-<script setup lang="ts" name="RoleManagement">
+<script setup lang="ts" name="Role">
 import RoleModel from './RoleModel.vue'
 import { useModal } from '@/components/Modal'
 import { PageWrapper } from '@/components/Page'
