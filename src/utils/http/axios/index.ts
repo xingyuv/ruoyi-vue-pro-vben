@@ -25,6 +25,9 @@ const urlPrefix = globSetting.urlPrefix
 const tenantEnable = globSetting.tenantEnable
 const { createMessage, createErrorModal, createSuccessModal } = useMessage()
 
+// 请求白名单，无须token的接口
+const whiteList: string[] = ['/login', '/refresh-token']
+
 /**
  * @description: 数据处理，方便区分多种处理方式
  */
@@ -57,8 +60,7 @@ const transform: AxiosTransform = {
     }
     console.info(data)
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, msg } = data
-    const result = data.data
+    const { code, data: result, msg } = data
     console.info(result)
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS
@@ -162,9 +164,17 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
+    // 是否需要设置 token
+    let isToken = (config as Recordable)?.requestOptions?.withToken == false
+    whiteList.some((v) => {
+      if (config.url) {
+        config.url.indexOf(v) > -1
+        return (isToken = false)
+      }
+    })
     // 请求之前处理config
     const token = getAccessToken()
-    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
+    if (token && !isToken) {
       // jwt token
       ;(config as Recordable).headers.Authorization = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
