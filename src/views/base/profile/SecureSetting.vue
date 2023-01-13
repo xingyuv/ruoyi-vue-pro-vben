@@ -18,19 +18,29 @@
       </template>
     </List>
   </CollapseContainer>
+  <PasswordModel @register="registerModal" @success="handleSuccess" />
 </template>
 <script setup lang="ts">
 import { List } from 'ant-design-vue'
 import { CollapseContainer } from '@/components/Container/index'
 import { secureSettingList } from './data'
+import { useModal } from '@/components/Modal'
+import { useMessage } from '@/hooks/web/useMessage'
+import PasswordModel from './PasswordModel.vue'
 
 const ListItem = List.Item
 const ListItemMeta = List.Item.Meta
 
+const { createMessage } = useMessage()
+const [registerModal, { openModal }] = useModal()
+
 function handleEdit(title: string) {
   if (title == '账户密码') {
-    console.info(1)
+    openModal(true, {})
   }
+}
+function handleSuccess() {
+  createMessage.success('更新成功！')
 }
 </script>
 <style lang="less" scoped>

@@ -4,7 +4,7 @@
     <Description v-if="!isForm" :data="formData" :schema="allSchemas.detailSchema" />
   </BasicModal>
 </template>
-<script lang="ts" setup name="PostModel">
+<script lang="ts" setup name="DeptModel">
 import { ref } from 'vue'
 import { BasicModal, useModalInner } from '@/components/Modal'
 import { BasicForm, useForm } from '@/components/Form'

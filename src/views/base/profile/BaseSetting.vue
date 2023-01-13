@@ -8,7 +8,6 @@
         <div class="change-avatar">
           <div class="mb-2">头像</div>
           <CropperAvatar
-            :uploadApi="uploadAvatarApi"
             :value="avatar"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
@@ -31,12 +30,12 @@ import { useMessage } from '@/hooks/web/useMessage'
 import headerImg from '@/assets/images/header.jpg'
 import { baseSetschemas } from './data'
 import { useUserStore } from '@/store/modules/user'
-import { getUserProfileApi, uploadAvatarApi } from '@/api/base/profile'
+import { getUserProfileApi, updateUserProfileApi, uploadAvatarApi } from '@/api/base/profile'
 
 const { createMessage } = useMessage()
 const userStore = useUserStore()
 
-const [register, { setFieldsValue }] = useForm({
+const [register, { setFieldsValue, validate }] = useForm({
   labelWidth: 120,
   schemas: baseSetschemas,
   showActionButtonGroup: false
@@ -52,14 +51,21 @@ const avatar = computed(() => {
   return avatar || headerImg
 })
 
-function updateAvatar({ src, data }) {
+async function updateAvatar({ src, data }) {
+  await uploadAvatarApi({ avatarFile: data })
   const userinfo = userStore.getUserInfo
   userinfo.user.avatar = src
   userStore.setUserInfo(userinfo)
   console.log('data', data)
 }
-function handleSubmit() {
-  createMessage.success('更新成功！')
+
+async function handleSubmit() {
+  try {
+    const values = await validate()
+    await updateUserProfileApi(values)
+  } finally {
+    createMessage.success('更新成功！')
+  }
 }
 </script>
 
