@@ -12,6 +12,11 @@
     <template #overlay>
       <Menu @click="handleMenuClick">
         <MenuItem
+          key="profile"
+          :text="t('layout.header.accountCenter')"
+          icon="ion:person-outline"
+        />
+        <MenuItem
           key="doc"
           :text="t('layout.header.dropdownItemDoc')"
           icon="ion:document-text-outline"
@@ -47,9 +52,11 @@ import { useModal } from '@/components/Modal'
 import headerImg from '@/assets/images/header.jpg'
 import { propTypes } from '@/utils/propTypes'
 import { openWindow } from '@/utils'
+import { useGo } from '@/hooks/web/usePage'
 import { createAsyncComponent } from '@/utils/factory/createAsyncComponent'
+const go = useGo()
 
-type MenuEvent = 'logout' | 'doc' | 'lock'
+type MenuEvent = 'profile' | 'logout' | 'doc' | 'lock'
 
 const MenuItem = createAsyncComponent(() => import('./DropMenuItem.vue'))
 const LockAction = createAsyncComponent(() => import('../lock/LockModal.vue'))
@@ -84,8 +91,15 @@ function openDoc() {
   openWindow(DOC_URL)
 }
 
+function openProfile() {
+  go('/profile/index')
+}
+
 function handleMenuClick(e: MenuInfo) {
   switch (e.key as MenuEvent) {
+    case 'profile':
+      openProfile()
+      break
     case 'logout':
       handleLoginOut()
       break
