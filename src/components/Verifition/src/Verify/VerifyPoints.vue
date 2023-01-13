@@ -64,7 +64,7 @@
  * */
 import { resetSize } from './../utils/util'
 import { aesEncrypt } from './../utils/ase'
-import { getCaptcha, checkCaptcha } from '@/api/sys/login'
+import { getCaptcha, checkCaptcha } from '@/api/base/login'
 import { onMounted, reactive, ref, nextTick, toRefs, getCurrentInstance } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 

@@ -123,7 +123,7 @@ import { useDesign } from '@/hooks/web/useDesign'
 import * as authUtil from '@/utils/auth'
 
 import { Verify } from '@/components/Verifition'
-import { getTenantIdByName } from '@/api/sys/login'
+import { getTenantIdByName } from '@/api/base/login'
 
 const ACol = Col
 const ARow = Row

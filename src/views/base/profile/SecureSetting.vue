@@ -7,7 +7,7 @@
             <template #title>
               {{ item.title }}
               <div class="extra" v-if="item.extra">
-                {{ item.extra }}
+                <a-button type="link" @click="handleEdit(item.title)">{{ item.extra }}</a-button>
               </div>
             </template>
             <template #description>
@@ -26,6 +26,12 @@ import { secureSettingList } from './data'
 
 const ListItem = List.Item
 const ListItemMeta = List.Item.Meta
+
+function handleEdit(title: string) {
+  if (title == '账户密码') {
+    console.info(1)
+  }
+}
 </script>
 <style lang="less" scoped>
 .extra {

@@ -7,15 +7,8 @@
       <Col :span="10">
         <div class="change-avatar">
           <div class="mb-2">头像</div>
-          <!-- <CropperAvatar
-            :uploadApi="uploadApi"
-            :value="avatar"
-            btnText="更换头像"
-            :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
-            @change="updateAvatar"
-            width="150"
-          /> -->
           <CropperAvatar
+            :uploadApi="uploadAvatarApi"
             :value="avatar"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
@@ -36,10 +29,9 @@ import { CollapseContainer } from '@/components/Container'
 import { CropperAvatar } from '@/components/Cropper'
 import { useMessage } from '@/hooks/web/useMessage'
 import headerImg from '@/assets/images/header.jpg'
-// import { accountInfoApi } from '@/api/demo/account'
 import { baseSetschemas } from './data'
 import { useUserStore } from '@/store/modules/user'
-// import { uploadApi } from '@/api/sys/upload'
+import { getUserProfileApi, uploadAvatarApi } from '@/api/base/profile'
 
 const { createMessage } = useMessage()
 const userStore = useUserStore()
@@ -51,9 +43,8 @@ const [register, { setFieldsValue }] = useForm({
 })
 
 onMounted(async () => {
-  // const data = await accountInfoApi()
-  // setFieldsValue(data)
-  setFieldsValue({})
+  const data = await getUserProfileApi()
+  setFieldsValue(data)
 })
 
 const avatar = computed(() => {

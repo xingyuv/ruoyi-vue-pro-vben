@@ -78,7 +78,7 @@
  * */
 import { aesEncrypt } from './../utils/ase'
 import { resetSize } from './../utils/util'
-import { getCaptcha, checkCaptcha } from '@/api/sys/login'
+import { getCaptcha, checkCaptcha } from '@/api/base/login'
 import { useI18n } from '@/hooks/web/useI18n'
 import {
   computed,

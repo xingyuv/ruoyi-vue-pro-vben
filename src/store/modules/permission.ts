@@ -15,7 +15,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { filter } from '@/utils/helper/treeHelper'
 import projectSetting from '@/settings/projectSetting'
-import { getMenuList } from '@/api/sys/menu'
+import { getMenuList } from '@/api/base/menu'
 import { PageEnum } from '@/enums/pageEnum'
 import { PermissionModeEnum } from '@/enums/appEnum'
 

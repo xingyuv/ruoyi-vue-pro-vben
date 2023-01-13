@@ -1,4 +1,7 @@
 import { FormSchema } from '@/components/Form/index'
+import { useI18n } from '@/hooks/web/useI18n'
+
+const { t } = useI18n()
 
 export interface ListItem {
   key: string
@@ -36,33 +39,33 @@ export const settingList = [
 // 基础设置 form
 export const baseSetschemas: FormSchema[] = [
   {
+    field: 'nickname',
+    component: 'Input',
+    label: t('profile.user.nickname'),
+    colProps: { span: 18 }
+  },
+  {
+    field: 'mobile',
+    component: 'Input',
+    label: t('profile.user.mobile'),
+    colProps: { span: 18 }
+  },
+  {
     field: 'email',
     component: 'Input',
-    label: '邮箱',
+    label: t('profile.user.email'),
     colProps: { span: 18 }
   },
   {
-    field: 'name',
-    component: 'Input',
-    label: '昵称',
-    colProps: { span: 18 }
-  },
-  {
-    field: 'introduction',
-    component: 'InputTextArea',
-    label: '个人简介',
-    colProps: { span: 18 }
-  },
-  {
-    field: 'phone',
-    component: 'Input',
-    label: '联系电话',
-    colProps: { span: 18 }
-  },
-  {
-    field: 'address',
-    component: 'Input',
-    label: '所在地区',
+    field: 'sex',
+    component: 'RadioGroup',
+    componentProps: {
+      options: [
+        { label: '男', value: 1 },
+        { label: '女', value: 2 }
+      ]
+    },
+    label: t('profile.user.sex'),
     colProps: { span: 18 }
   }
 ]
