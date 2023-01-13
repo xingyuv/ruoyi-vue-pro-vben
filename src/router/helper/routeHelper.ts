@@ -75,23 +75,29 @@ function dynamicImport(
 // 将背景对象变成路由对象
 export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModule[]): T[] {
   routeList.forEach((route) => {
+    if (route.children && route.parentId == 0) {
+      route.component = 'LAYOUT'
+    } else if (!route.children) {
+      route.component = route.component as string
+    }
     const component = route.component as string
-    //处理顶级非目录路由
-    if (route.children && !component) {
-      if (!component) {
+    if (component) {
+      if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get('LAYOUT'.toUpperCase())
         const meta = route.meta || {}
         meta.title = route.name
         meta.icon = route.icon
         route.meta = meta
       } else {
+        //处理顶级非目录路由
+        const meta = route.meta || {}
+        meta.title = route.name
+        meta.icon = route.icon
+        meta.single = true
         route.children = [cloneDeep(route)]
         route.component = LAYOUT
         route.name = `${route.name}Parent`
         route.path = ''
-        const meta = route.meta || {}
-        meta.single = true
-        meta.affix = false
         route.meta = meta
       }
     } else {
