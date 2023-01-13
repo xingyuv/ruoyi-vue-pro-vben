@@ -7,6 +7,7 @@ import { store } from '@/store'
 import { useUserStore } from './user'
 import { useAppStoreWithOut } from './app'
 import { asyncRoutes } from '@/router/routes'
+import dashboard from '@/router/routes/modules/dashboard'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { transformRouteToMenu } from '@/router/helper/menuHelper'
 import { transformObjToRoute, flatMultiLevelRoutes } from '@/router/helper/routeHelper'
@@ -233,7 +234,7 @@ export const usePermissionStore = defineStore({
           routeList = filter(routeList, routeRemoveIgnoreFilter)
           routeList = routeList.filter(routeRemoveIgnoreFilter)
           routeList = flatMultiLevelRoutes(routeList)
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList]
+          routes = [PAGE_NOT_FOUND_ROUTE, dashboard, ...routeList]
           break
       }
 

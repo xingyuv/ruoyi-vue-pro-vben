@@ -21,8 +21,6 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
   dynamicViewsModules = dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}')
   if (!routes) return
   routes.forEach((item) => {
-    const meta = buildMeta(item)
-    item.meta = meta
     if (!item.component && item.meta?.frameSrc) {
       item.component = 'IFRAME'
     }
@@ -38,6 +36,10 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     } else if (name) {
       item.component = getParentLayout()
     }
+    const meta = item.meta || {}
+    meta.title = item.name
+    meta.icon = item.icon
+    item.meta = meta
     children && asyncImportRoute(children)
   })
 }
@@ -74,26 +76,27 @@ function dynamicImport(
 export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModule[]): T[] {
   routeList.forEach((route) => {
     const component = route.component as string
-    const meta = buildMeta(route)
     //处理顶级非目录路由
-    if (route.parentId == 0) {
-      route.component = LAYOUT
-    }
-    if (component) {
-      if (component.toUpperCase() === 'LAYOUT') {
-        route.component = LayoutMap.get(component.toUpperCase())
+    if (route.children && !component) {
+      if (!component) {
+        route.component = LayoutMap.get('LAYOUT'.toUpperCase())
+        const meta = route.meta || {}
+        meta.title = route.name
+        meta.icon = route.icon
+        route.meta = meta
       } else {
         route.children = [cloneDeep(route)]
         route.component = LAYOUT
         route.name = `${route.name}Parent`
         route.path = ''
+        const meta = route.meta || {}
         meta.single = true
         meta.affix = false
+        route.meta = meta
       }
     } else {
       warn('请正确配置路由：' + route?.name + '的component属性')
     }
-    route.meta = meta
     route.children && asyncImportRoute(route.children)
   })
   return routeList as unknown as T[]
@@ -181,13 +184,4 @@ function isMultipleRoute(routeModule: AppRouteModule) {
     }
   }
   return flag
-}
-
-function buildMeta(route: AppRouteModule) {
-  const meta = route.meta || {}
-  meta.title = meta.title || route.name
-  meta.icon = meta.icon || route.icon
-  meta.hidden = route.visible ? !route.visible : false
-  meta.noCache = route.keepAlive ? !route.keepAlive : false
-  return meta
 }
