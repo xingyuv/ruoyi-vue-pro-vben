@@ -54,7 +54,10 @@ export interface UserProfileUpdateReqVO {
 enum Api {
   getUserProfileApi = '/system/user/profile/get',
   putUserProfileApi = '/system/user/profile/update',
-  uploadAvatarApi = '/system/user/profile/update-avatar'
+  uploadAvatarApi = '/system/user/profile/update-avatar',
+  updateUserPwdApi = '/system/user/profile/update-password',
+  socialBindApi = '/system/social-user/bind',
+  socialUnbindApi = '/system/social-user/unbind'
 }
 
 /**
@@ -74,7 +77,7 @@ export function updateUserProfileApi(data: UserProfileUpdateReqVO) {
 // 用户密码重置
 export const updateUserPwdApi = (oldPassword: string, newPassword: string) => {
   return defHttp.put({
-    url: '/system/user/profile/update-password',
+    url: Api.updateUserPwdApi,
     data: {
       oldPassword: oldPassword,
       newPassword: newPassword
@@ -88,4 +91,34 @@ export const uploadAvatarApi = (data) => {
     file: data
   }
   return defHttp.uploadFile({ url: Api.uploadAvatarApi }, params)
+}
+
+// 社交绑定，使用 code 授权码
+export const socialBind = (type, code, state) => {
+  return defHttp.post({
+    url: Api.socialBindApi,
+    data: {
+      type,
+      code,
+      state
+    }
+  })
+}
+
+// 取消社交绑定
+export const socialUnbind = (type, openid) => {
+  return defHttp.delete({
+    url: Api.socialUnbindApi,
+    data: {
+      type,
+      openid
+    }
+  })
+}
+
+// 社交授权的跳转
+export const socialAuthRedirect = (type, redirectUri) => {
+  return defHttp.get({
+    url: '/system/auth/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri
+  })
 }
